@@ -57,6 +57,27 @@ class Bullet:
         self.height = 3
         self.speed = 4
 
+def destroy_invader(invader):
+    global score
+    score += 10
+
+def display_score():
+    font = pygame.font.Font(None, 42)
+    score_text = font.render(f"Score: {score}", True, WHITE)
+    screen.blit(score_text, (10, 10))
+
+def check_game_over():
+    global lives
+    if lives <=0:
+        return True
+    return False
+
+def display_game_over():
+    font = pygame.font.Font(None, 72)
+    game_over_text = font.render("GAME OVER", True, RED)
+    screen.blit(game_over_text, (width // 2 - game_over_text.get_width() // 2, height // 2))
+
+score = 0
 
 player_bullets = []
 invader_bullets = []
@@ -115,6 +136,16 @@ while running:
 
     for invader in invaders:
         invader.img = invader_imgs[current_animation_frame]
+
+    # Update and draw the player score
+    display_score()
+
+    #check for game over
+    if check_game_over():
+        game_over = True
+
+    if game_over:
+        display_game_over()
 # Grid of the invaders
 invader_rows = 5
 invader_cols = 10
@@ -130,6 +161,7 @@ for row in range(invader_rows):
     player_ship = PlayerShip()
 
     random invader shooting
+    implement bullet collisions
     
     #draw objects
     player_ship.draw()
@@ -163,7 +195,7 @@ for row in range(invader_rows):
 
 
 
-#Implement Shooting: Allow the player's ship to shoot bullets when the player presses a designated key. Handle collisions between bullets and enemy invaders.
+
 
 #Implement Game Over and Scoring: Implement the game over condition, where the game ends if the enemy invaders reach the bottom of the screen. Create a scoring system to keep track of the player's score.
 
