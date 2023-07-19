@@ -9,6 +9,10 @@ pygame.display.set_caption("Space Invaders Clone")
 
 pygame. display.update()
 
+pygame.mixer.init()
+
+
+
 player_ship_img = pygame.image.load("media/Lightning.png")
 
 player_ship_width = 60
@@ -20,6 +24,30 @@ invader1_img = pygame.image.load("media/Dove.png")
 invader1_width = 50
 invader1_height = 40
 invader1_img = pygame.transform.scale(invader1_img, (invader1_width, invader1_height))
+
+explosion_sound = pygame.mixer.Sound("media/explosion.wav")
+fastinvader1_sound = pygame.mixer.Sound("media/fastinvader1.wav")
+fastinvader2_sound = pygame.mixer.Sound("media/fastinvader2.wav")
+fastinvader3_sound = pygame.mixer.Sound("media/fastinvader3.wav")
+fastinvader4_sound = pygame.mixer.Sound("media/fastinvader4.wav")
+invaderkilled_sound = pygame.mixer.Sound("media/invaderkilled.wav")
+shoot_sound = pygame.mixer.Sound("media/shoot.wav")
+ufopitch_sound = pygame.mixer.Sound("media/ufo_lowpitch.wav")
+
+#replace consitions to detect events
+if shooting_condition:
+    shoot_sound()
+
+if invader_destroyed:
+    invaderkilled_sound()
+
+if player_hit:
+    explosion_sound()
+
+# half volume sound effects
+shoot_sound.set_volume(0.5)
+invaderkilled_sound.set_volume(0.5)
+explosion_sound.set_volume(0.5)
 
 class Invader1:
     def __init__(self, x, y):
@@ -173,6 +201,8 @@ for row in range(invader_rows):
     # update display
     pygame.display.update()
 
+pygame.mixer.quit()
+pygame.quit()
 
 
 
@@ -197,7 +227,7 @@ for row in range(invader_rows):
 
 
 
-#Implement Game Over and Scoring: Implement the game over condition, where the game ends if the enemy invaders reach the bottom of the screen. Create a scoring system to keep track of the player's score.
+
 
 #Add Sound Effects: Use sound effects to enhance the gaming experience. Include sounds for shooting, enemy explosions, and player's ship movement.
 
