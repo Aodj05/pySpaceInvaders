@@ -15,6 +15,25 @@ player_ship_width = 60
 player_ship_height = 40
 player_ship_img = pygame.transform.scale(player_ship_img, (player_ship width, player_ship_height))
 
+invader1_img = pygame.image.load("media/Dove.png")
+
+invader1_width = 50
+invader1_height = 40
+invader1_img = pygame.transform.scale(invader1_img, (invader1_width, invader1_height))
+
+class Invader1:
+    def __init__(self, x, y):
+        self.img = invader1_img
+        self.width = invader1_width
+        self.height = invader1_height
+        self.x = x
+        self.y = y
+        # Adjust invader's movement speed
+        self.speed = 2
+
+    def draw(self) :
+        screen.blit(self.img, (self.x, self.y))
+
 class PlayerShip:
     def __init__(self):
         self.img = player_ship_img
@@ -30,8 +49,35 @@ class PlayerShip:
     def draw(self):
         screen.blit(self.img, (self.x, self.y))
 
+class Bullet:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+        self.width = 5
+        self.height = 3
+        self.speed = 4
+
+
+player_bullets = []
+invader_bullets = []
+
+invader_dir = 1
+invader_speed = 2
+
+invader_imgs = [pygame.image.load("media/Dove.png"), pygame.image.load("media/Dove.png")]
+invader_animation_time = 500
+current_animation_frame = 0
+last_animation_time = pygame.time.get_ticks()
+
 running = True
 while running:
+    for invader in invaders:
+        invader.x += invader_speed * invader_dir
+
+    # check window boundaries
+    for invader in invaders:
+        if invader.x <= or invader.x + invader_width >= width:
+
     # Game loop
     pygame.display.update()
     for event in pygame.event.get():
@@ -42,12 +88,56 @@ while running:
                 player_ship.x -= player_ship.speed
             elif event.key == pygame.K_RIGHT:
                 player_ship.x += player_ship.speed
+            if event.key == pygame.K_SPACE:
+                player_bullets.append(Bullet(player_ship.x + player_ship.width // 2, player_ship.y))
 
-    player_ship = PlayerShip()
+    for bullet in player_bullets:
+        bullet.y -= bullet.speed
+
+    for bullet in invader_bullets:
+        bullet.y += bullet.speed
+
+    #filter off-screen bullets
+    player_bullets = [bullet for bullet in player_bulllets if bullet.y > 0]
+    invader_bullets = [bullet for bullet in invader_bulllets if bullet.y < height]
+
     #screen clear
     screen.fill((0, 0, 0))
+
+    # draw invader objects
+    for invader in invaders:
+        invader.draw()
+    
+    current_time = pygame.time.get_ticks()
+    if current_time - last_animation_time >= invader_animation_time:
+        last_animation_time = current_time
+        current_animation_frame = (current_animation_frame + 1) % len(invader_imgs)
+
+    for invader in invaders:
+        invader.img = invader_imgs[current_animation_frame]
+# Grid of the invaders
+invader_rows = 5
+invader_cols = 10
+
+invaders = []
+for row in range(invader_rows):
+    for col in range(invader_cols):
+        #spacing between invaders
+        invader_x = col * (invader_width + 10)
+        invader_y = row * (invader_height + 10)
+        invaders.append(Invader1(invader_x, invader_y,))
+
+    player_ship = PlayerShip()
+
+    random invader shooting
+    
     #draw objects
     player_ship.draw()
+    for bullet in player_bullets:
+        pygame.draw.rect(screen, BULLET_COLOR, (bullet.x, bullet.y, bullet.width, bullet.height))
+
+    for bullet in invader_bullets:
+        pygame.draw.rect(screen, BULLET_COLOR, (bullet.x, bullet.y, bullet.width, bullet.height))
     # update display
     pygame.display.update()
 
@@ -69,9 +159,9 @@ while running:
 
 
 # Todo
-#Create the Player's Ship: Implement the player's ship and allow it to move left and right using keyboard input. Ensure that the ship stays within the game window boundaries.
 
-#Create the Enemy Invaders: Design the enemy invaders and arrange them in rows and columns. Make them move left and right across the screen, and also move down when they hit the edge of the screen.
+
+
 
 #Implement Shooting: Allow the player's ship to shoot bullets when the player presses a designated key. Handle collisions between bullets and enemy invaders.
 
